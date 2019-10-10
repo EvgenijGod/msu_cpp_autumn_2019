@@ -6,10 +6,10 @@ my_prog: main.o Timer.o
 	$(CC) -o my_prog main.o Timer.o
 
 main.o: main.cpp Timer.cpp
-	$(CC) -c main.cpp
+	$(CC) -c -O2 -std=c++14 main.cpp
 
 Timer.o: Timer.cpp Timer.h
-	$(CC) -c Timer.cpp
+	$(CC) -c -O2 -std=c++14 Timer.cpp
 
 run:
 	./my_prog
