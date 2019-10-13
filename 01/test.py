@@ -11,6 +11,7 @@ def check(expr, result):
 
 check('-2147483648 + 1', '-2147483647')
 check('1 + 3* 4', '13')
+check('1 - - 3 + - - - 70', '-66')
 check('1 * 2 + 1 * 2 --1 * -2 + 0', '2')
 check('1 + --3 * ---4 * 1 + -0 + --0', '-11')
 check('4 / 3 * 9', '9')
@@ -21,4 +22,5 @@ check('4 4', 'ERROR : SIGN IS LOST')
 check('', 'ERROR : NUMBER IS LOST')
 check('1 + 10 / 0 * 3 + 1 * 0 + ---1', 'ERROR : ZERO DIVISION')
 check('4 * +4', 'ERROR : NUMBER IS LOST')
+check("4 * 4 +", 'ERROR : NUMBER IS LOST')
 

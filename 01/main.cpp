@@ -23,6 +23,9 @@ pair<int, bool> get_num (string &s) {
     while (s[iter] == '-') {
         cnt++;
         iter++;
+        while(isspace(s[iter])) {
+            iter++;
+        }
     }
     if (cnt % 2 == 1) {
         sign = false;
@@ -176,6 +179,10 @@ void check_str(string s) {
     }
 }
 int main(int argc, char *argv[]) {
+    if (argc > 2) {
+        cerr << "ERROR : TOO MANY ARGUMENTS" << endl;
+        _Exit(1);
+    }
     string s = string(argv[1]);
     check_str(s);
     s = "0 + " + s;
