@@ -94,7 +94,7 @@ int calculate (string &s, char &op, int mode = 0) {
         }
         case 0: {
             while (true) {
-                pair<int, bool> res = get_num(s);
+                auto res = get_num(s);
                 if (res.second == 0) {
                     return ans;
                 }
