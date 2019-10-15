@@ -70,14 +70,13 @@ int make_op(int a, int b, char op1) {
 }
 
 int calculate (string &s, char &op, int mode = 0) {
-    //string s = s1;
     int ans = 0;
     switch (mode) {
         case 1: {
             ans = 1;
             char mul_op = '*';
             while (true) {
-                pair<int, bool> res = get_num(s);
+                auto res = get_num(s);
                 if (res.second == 0) {
                     return ans;
                 }
@@ -120,7 +119,14 @@ int calculate (string &s, char &op, int mode = 0) {
     return ans;
 }
 
-void check_str(string s) {
+int calculate_ans(const string &str, int argc) {
+    if (argc > 2) {
+        throw runtime_error("TOO MANY ARGUMENTS");
+    }
+    if (argc == 1) {
+        throw runtime_error("NO ARGUMENTS");
+    }
+    string s = str;
     for (int i = 0; i < s.size(); i++) {
         if (isspace(s[i]) || is_sign(s[i]) || isdigit(s[i])) {
             continue;
@@ -163,28 +169,15 @@ void check_str(string s) {
             throw runtime_error("NUMBER IS LOST");
         }
     }
+    string exec = "0 + " + str;
+    char op = '+';
+    return calculate(exec, op);
 }
 
 int main(int argc, char *argv[]) {
-    if (argc > 2) {
-        cerr << "ERROR : TOO MANY ARGUMENTS" << endl;
-        _Exit(1);
-    }
-    if (argc == 1) {
-        cerr << "ERROR : NO ARGUMENTS" << endl;
-        _Exit(1);
-    }
     string s = string(argv[1]);
     try {
-        check_str(s);
-    } catch (const exception &e) {
-        cerr << "ERROR : " << e.what() << endl;
-        return 1;
-    }
-    string exec = "0 + " + s;
-    char op = '+';
-    try {
-        cout << to_string(calculate(exec, op)) << endl;
+        cout << calculate_ans(s, argc) << endl;
     } catch (const exception &e) {
         cerr << "ERROR : " << e.what() << endl;
         return 1;
