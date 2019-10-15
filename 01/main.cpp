@@ -4,17 +4,12 @@
 
 using namespace std;
 
-char op = '+';
-
 bool is_sign(char c) {
-    if (c == '+' || c == '-' || c == '*' || c == '/') {
-        return true;
-    }
-    return false;
+    return (c == '+' || c == '-' || c == '*' || c == '/');
 }
 
 pair<int, bool> get_num (string &s) {
-    int iter = 0;
+    size_t iter = 0;
     while(isspace(s[iter])) {
         iter++;
     }
@@ -44,7 +39,7 @@ pair<int, bool> get_num (string &s) {
 }
 
 char get_sign (string &s) {
-    int iter = 0;
+    size_t iter = 0;
     while(isspace(s[iter])) {
         iter++;
     }
@@ -68,32 +63,29 @@ int make_op(int a, int b, char op1) {
             return a * b;
         case '/':
             if (b == 0) {
-                cerr << "ERROR : ZERO DIVISION" << endl;
-                _Exit(1);
+                throw runtime_error("ZERO DIVISION");
             }
             return a / b;
     }
 }
 
-int calculate (string &s, int mode = 0) {
+int calculate (string &s, char &op, int mode = 0) {
+    //string s = s1;
     int ans = 0;
     switch (mode) {
         case 1: {
             ans = 1;
             char mul_op = '*';
-            while (1) {
+            while (true) {
                 pair<int, bool> res = get_num(s);
                 if (res.second == 0) {
                     return ans;
                 }
                 char sign = get_sign(s);
+                ans = make_op(ans, res.first, mul_op);
+                mul_op = sign;
                 if (sign == '!') {
-                    ans = make_op(ans, res.first, mul_op);
-                    mul_op = sign;
                     return ans;
-                } else {
-                    ans = make_op(ans, res.first, mul_op);
-                    mul_op = sign;
                 }
                 if (mul_op == '+' || mul_op == '-') {
                     op = mul_op;
@@ -102,7 +94,7 @@ int calculate (string &s, int mode = 0) {
             }
         }
         case 0: {
-            while (1) {
+            while (true) {
                 pair<int, bool> res = get_num(s);
                 if (res.second == 0) {
                     return ans;
@@ -116,7 +108,7 @@ int calculate (string &s, int mode = 0) {
                     if (sign == '*' || sign == '/') {
                         char tmp_op = op;
                         s = to_string(res.first) + sign + s;
-                        ans = make_op(ans, calculate(s, 1), tmp_op);
+                        ans = make_op(ans, calculate(s, op, 1), tmp_op);
                     } else {
                         ans = make_op(ans, res.first, op);
                         op = sign;
@@ -133,13 +125,12 @@ void check_str(string s) {
         if (isspace(s[i]) || is_sign(s[i]) || isdigit(s[i])) {
             continue;
         } else {
-            cerr << "ERROR : WRONG SYMBOLS" << endl;
-            _Exit(1);
+            throw runtime_error(" WRONG SYMBOLS");
         }
     }
     pair<int, bool> tmp;
     char c;
-    while (1) {
+    while (true) {
         tmp = get_num(s);
         if (tmp.second == false) {
             break;
@@ -151,41 +142,52 @@ void check_str(string s) {
     }
     if (tmp.second == false) {
         if (c != '!') {
-            cerr << "ERROR : NUMBER IS LOST" << endl;
-            _Exit(1);
+            throw runtime_error("NUMBER IS LOST");
         } else {
             tmp = get_num(s);
             if (tmp.second == true) {
-                cerr << "ERROR : SIGN IS LOST" << endl;
-                _Exit(1);
+                throw runtime_error("SIGN IS LOST");
             }
             c = get_sign(s);
             if (c != '!') {
-                cerr << "ERROR : NUMBER IS LOST" << endl;
-                _Exit(1);
+                throw runtime_error("NUMBER IS LOST");
             }
         }
     } else {
         tmp = get_num(s);
         if (tmp.second == true) {
-            cerr << "ERROR : SIGN IS LOST" << endl;
-            _Exit(1);
+            throw runtime_error("SIGN IS LOST");
         }
         c = get_sign(s);
         if (c != '!') {
-            cerr << "ERROR : NUMBER IS LOST" << endl;
-            _Exit(1);
+            throw runtime_error("NUMBER IS LOST");
         }
     }
 }
+
 int main(int argc, char *argv[]) {
     if (argc > 2) {
         cerr << "ERROR : TOO MANY ARGUMENTS" << endl;
         _Exit(1);
     }
+    if (argc == 1) {
+        cerr << "ERROR : NO ARGUMENTS" << endl;
+        _Exit(1);
+    }
     string s = string(argv[1]);
-    check_str(s);
-    s = "0 + " + s;
-    cout << to_string(calculate(s)) << endl;
+    try {
+        check_str(s);
+    } catch (const exception &e) {
+        cerr << "ERROR : " << e.what() << endl;
+        return 1;
+    }
+    string exec = "0 + " + s;
+    char op = '+';
+    try {
+        cout << to_string(calculate(exec, op)) << endl;
+    } catch (const exception &e) {
+        cerr << "ERROR : " << e.what() << endl;
+        return 1;
+    }
     return 0;
 }
