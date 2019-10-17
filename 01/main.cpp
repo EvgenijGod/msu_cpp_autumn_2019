@@ -119,13 +119,7 @@ int calculate (string &s, char &op, int mode = 0) {
     return ans;
 }
 
-int calculate_ans(const string &str, int argc) {
-    if (argc > 2) {
-        throw runtime_error("TOO MANY ARGUMENTS");
-    }
-    if (argc == 1) {
-        throw runtime_error("NO ARGUMENTS");
-    }
+int calculate_ans(const string &str) {
     string s = str;
     for (int i = 0; i < s.size(); i++) {
         if (isspace(s[i]) || is_sign(s[i]) || isdigit(s[i])) {
@@ -176,8 +170,16 @@ int calculate_ans(const string &str, int argc) {
 
 int main(int argc, char *argv[]) {
     string s = string(argv[1]);
+    if (argc > 2) {
+        cerr << "ERROR : TOO MANY ARGUMENTS";
+        return 1;
+    }
+    if (argc == 1) {
+        cerr << "ERROR : NO ARGUMENTS";
+        return 1;
+    }
     try {
-        cout << calculate_ans(s, argc) << endl;
+        cout << calculate_ans(s) << endl;
     } catch (const exception &e) {
         cerr << "ERROR : " << e.what() << endl;
         return 1;
