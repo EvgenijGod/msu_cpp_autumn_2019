@@ -14,5 +14,8 @@ test.o: test.cpp
 Timer.o: Timer.cpp
 	$(CC) -c -O2 -std=c++14 Timer.cpp
 
+test:
+	./my_prog
+
 clean:
 	rm -rf *.o my_prog
