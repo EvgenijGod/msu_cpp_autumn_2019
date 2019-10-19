@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
-#include "test.cpp"
+#include "allocator.h"
+#include "Timer.h"
+
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -13,56 +15,61 @@ int main(int argc, char *argv[]) {
     cout << "-----" << endl;
     LinearAllocator A(10000);
     char *ans, *st;
-    st = A.alloc(0);
-    ans = A.alloc(4000);
+    {
+        Timer t;
+        ans = A.alloc(6000);
+    }
     if (ans != nullptr) {
         cout << "Correct" << endl;
     } else {
         cout << "Error" << endl;
     }
-    ans = A.alloc(6000);
-    if (ans != nullptr) {
-        cout << "Correct" << endl;
-    } else {
-        cout << "Error" << endl;
+    {
+        Timer t;
+        ans = A.alloc(7000);
     }
-    ans = A.alloc(7000);
     if (ans == nullptr) {
         cout << "Correct" << endl;
     } else {
         cout << "Error" << endl;
     }
-    A.reset();
-    ans = A.alloc(7000);
+    {
+        Timer t;
+        A.reset();
+        ans = A.alloc(7000);
+    }
     if (ans != nullptr) {
         cout << "Correct" << endl;
     } else {
         cout << "Error" << endl;
     }
-    ans = A.alloc(0);
+    {
+        Timer t;
+        ans = A.alloc(0);
+    }
     if (ans != nullptr) {
         cout << "Correct" << endl;
     } else {
         cout << "Error" << endl;
     }
-    ans = A.alloc(3000);
+    {
+        Timer t;
+        ans = A.alloc(3000);
+    }
     if (ans != nullptr) {
         cout << "Correct" << endl;
     } else {
         cout << "Error" << endl;
     }
-    ans = A.alloc(0);
+    {
+        Timer t;
+        ans = A.alloc(0);
+    }
     if (ans != nullptr) {
         cout << "Correct" << endl;
     } else {
         cout << "Error" << endl;
     }
-    if (st + 10000 == ans) {
-        cout << "Correct" << endl;
-    } else {
-        cout << "Error" << endl;
-    }
-
     cout << "-----" << endl;
     {
         Timer t;
@@ -77,4 +84,5 @@ int main(int argc, char *argv[]) {
     } else {
         cout << "Error" << endl;
     }
+    return 0;
 }
