@@ -8,7 +8,14 @@ Row::Row(int *matrix, size_t row, size_t row_len) {
     row_arr += row * row_len;
 }
 
-int& Row::operator[](size_t iter) const {
+int& Row::operator[](size_t iter) {
+    if (iter >= this->row_len) {
+        throw std::out_of_range("Error : column is out of range\n");
+    }
+    return row_arr[iter];
+}
+
+const int& Row::operator[](size_t iter) const{
     if (iter >= this->row_len) {
         throw std::out_of_range("Error : column is out of range\n");
     }
@@ -16,12 +23,12 @@ int& Row::operator[](size_t iter) const {
 }
 
 Row::~Row() = default;
+Matrix::Matrix() {};
 
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
     matrix = (int *)calloc(rows * cols, sizeof(int));
-    size_t n = rows * cols;
-    for (int i = 0; i < n; i++) {
-        matrix[i] = 1;
+    if (matrix == nullptr) {
+        throw std::bad_alloc();
     }
 }
 
@@ -33,7 +40,7 @@ size_t Matrix::getColumns() {
     return cols;
 }
 
-const Matrix& Matrix::operator*=(size_t c) const {
+Matrix& Matrix::operator*=(size_t c){
     size_t n = rows * cols;
     for (int i = 0; i < n; i++) {
         matrix[i] *= c;
@@ -41,7 +48,7 @@ const Matrix& Matrix::operator*=(size_t c) const {
     return *this;
 }
 
-bool Matrix::operator==(const Matrix& m) const {
+bool Matrix::operator==(Matrix& m) const {
     if (this == &m) {
         return true;
     }
@@ -57,8 +64,15 @@ bool Matrix::operator==(const Matrix& m) const {
     return true;
 }
 
-bool Matrix::operator!=(const Matrix& m) const {
+bool Matrix::operator!=(Matrix& m) const {
     return !(*this == m);
+}
+
+Row Matrix::operator[](size_t row) {
+    if (row >= this->rows) {
+        throw std::out_of_range("Error : row is out of range\n");
+    }
+    return Row(matrix, row, cols);
 }
 
 const Row Matrix::operator[](size_t row) const {

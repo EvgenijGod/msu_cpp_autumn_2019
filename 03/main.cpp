@@ -6,12 +6,18 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     Matrix m1(2, 3);
+    try {
+        Matrix m101(200000000, 300000);
+    } catch (const exception &e) {
+        cerr << e.what() << endl;
+    }
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 3; j++) {
             cout << m1[i][j] << " ";
         }
         cout << endl;
     }
+    m1[0][0] = 3;
     m1 *= 10;
     cout << endl;
     for (int i = 0; i < 2; i++) {
