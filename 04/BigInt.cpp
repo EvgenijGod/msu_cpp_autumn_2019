@@ -12,15 +12,7 @@ BigInt::BigInt(int ss) {
         s = -s;
     }
     number = new int[30]();
-    lenth = 0;
-    if (s == 0) {
-        lenth = 1;
-    } else
-    while (s != 0) {
-        number[lenth] = (int)(s % 10);
-        s /= 10;
-        lenth++;
-    }
+    set_number(s);
     resize();
 }
 
@@ -207,6 +199,18 @@ bool BigInt::operator<=(const BigInt &num) const{
 bool BigInt::operator>=(const BigInt &num) const{
     return !(*this < num);
 }
+void BigInt::set_number(long long val) {
+    lenth = 0;
+    if (val == 0) {
+        lenth = 1;
+    } else {
+        while (val != 0) {
+            number[lenth] = (int)(val % 10);
+            val /= 10;
+            lenth++;
+        }
+    }
+}
 bool BigInt::operator==(const BigInt &num) const{
     if (this == &num) {
         return true;
@@ -273,10 +277,12 @@ BigInt& BigInt::operator=(const BigInt &val){
     //std::cout << val << " ! " << *this << std::endl;
     return *this;
 }
+
 BigInt& BigInt::operator=(int val){
-    BigInt tmp(val);
+    this->set_number(val);
+    //BigInt tmp(val);
     //std::cout << val << " ! " << *this << std::endl;
-    *this = tmp;
+    //*this = tmp;
     //std::cout << val << " ! " << *this << std::endl;
     return *this;
 }

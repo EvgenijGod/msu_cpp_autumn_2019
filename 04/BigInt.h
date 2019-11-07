@@ -9,7 +9,9 @@ private:
     int lenth = 0;
     int greater_num(const BigInt &n1, const BigInt &n2) const;
     void resize();
-
+    friend BigInt my_sum(const BigInt &n1, const BigInt &n2);
+    friend BigInt my_diff(const BigInt &n1, const BigInt &n2);
+    void set_number(long long val);
 public:
     BigInt();
     BigInt(int s);
@@ -31,8 +33,6 @@ public:
     BigInt& operator-=(const BigInt &tmp);
     friend std::ostream& operator<<(std::ostream &output, const BigInt &tmp);
     ~BigInt();
-    friend BigInt my_sum(const BigInt &n1, const BigInt &n2);
-    friend BigInt my_diff(const BigInt &n1, const BigInt &n2);
     friend BigInt operator+(int t, const BigInt& t1);
     friend BigInt operator-(int t, const BigInt& t1);
 
