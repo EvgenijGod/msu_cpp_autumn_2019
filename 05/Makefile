@@ -2,14 +2,14 @@ CC=g++
 
 all: my_prog
 
-my_prog: main.o BigInt.o
-	$(CC) -o my_prog main.o BigInt.o
+my_prog: main.o serializer.o
+	$(CC) -o my_prog main.o serializer.o
 
-main.o: main.cpp BigInt.h
+main.o: main.cpp serializer.h
 	$(CC) -c -O2 -std=c++14 main.cpp
 
-BigInt.o: BigInt.cpp
-	$(CC) -c -O2 -std=c++14 BigInt.cpp
+serializer.o: serializer.cpp
+	$(CC) -c -O2 -std=c++14 serializer.cpp
 
 test:
 	./my_prog
