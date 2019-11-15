@@ -24,12 +24,11 @@ void process(vector<string>&res, T&& val, Args&&... args)
 }
 
 template <class... Args>
-string format(string str, Args&&... args) {
+string format(const string &str, Args&&... args) {
     vector<string>res;
     stringstream out;
     process(res, forward<Args>(args)...);
-    bool open = false;
-    int n = str.size();
+    int n = (int)str.size();
     for (int i = 0; i < n; i++) {
         if (str[i] == '{') {
             int num = 0;
@@ -41,7 +40,7 @@ string format(string str, Args&&... args) {
                 num = num * 10 + (int)(str[i] - '0');
                 i++;
             }
-            if (i == n || num >= res.size()) {
+            if (i == n || num >= (int)res.size()) {
                 throw runtime_error("out of context");
             }
             out << res[num];
