@@ -28,7 +28,7 @@ string format(const string &str, Args&&... args) {
     vector<string>res;
     stringstream out;
     process(res, forward<Args>(args)...);
-    long long n = (long long)str.size();
+    size_t n = str.size();
     for (int i = 0; i < n; i++) {
         if (str[i] == '{') {
             int num = 0;
