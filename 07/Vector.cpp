@@ -4,24 +4,20 @@
 #include <limits.h>
 
 
-//using namespace std;
+using namespace std;
 template <class T>
 class Allocator
 {
 public:
-    template <class... T1>
-    void make(T *tmp, T1&&... zizn) {
-        new(tmp) T(zizn...);
-    }
-    /*void make(T *tmp) {
+    void make(T *tmp) {
         new (tmp) T();
     }
     void make(T *tmp, T&& zizn) {
-        new(tmp) T(std::move(zizn));
+        new(tmp) T(move(zizn));
     }
     void make(T * tmp, const T& zizn) {
         new(tmp) T(zizn);
-    }*/
+    }
     T* alloc(size_t cnt) {
         return (T*)calloc(cnt, sizeof(T));
     }
@@ -34,7 +30,7 @@ public:
 };
 
 template <class T>
-class Iterator : std::iterator<std::random_access_iterator_tag, T>
+class Iterator : iterator<random_access_iterator_tag, T>
 {
 public:
     explicit Iterator(T * tmp) {
@@ -46,17 +42,6 @@ public:
     Iterator& operator++ () {
         ++my;
         return *this;
-    }
-    Iterator operator+= (size_t c) {
-        my += c;
-        return *this;
-    }
-    Iterator operator-= (size_t c) {
-        my -= c;
-        return *this;
-    }
-    Iterator operator[](size_t c) {
-        return *(my + c);
     }
     Iterator& operator-- () {
         --my;
@@ -90,7 +75,7 @@ public:
             info = alloc_.alloc(num);
             size_t i = 0;
             while (i < num) {
-                alloc_.make(std::forward<T*>(info + i));
+                alloc_.make(info + i);
                 i++;
             }
         }
@@ -108,14 +93,14 @@ public:
         if (i < size_num) {
             return info[i];
         } else {
-            throw std::out_of_range("index is out of range\n");
+            throw out_of_range("index is out of range\n");
         }
     }
     const T& operator[] (size_t i) const {
         if (i < size_num) {
             return info[i];
         } else {
-            throw std::out_of_range("index is out of range\n");
+            throw out_of_range("index is out of range\n");
         }
     }
     iterator begin(){
@@ -131,17 +116,17 @@ public:
     const iterator end() const {
         return iterator(info + size_num);
     }
-    std::reverse_iterator<T> rbegin() {
-        return std::reverse_iterator<T>(end());
+    iterator rbegin() {
+        return reverse_iterator<T>(end());
     }
-    std::reverse_iterator<T> rend() {
-        return std::reverse_iterator<T>(begin());
+    iterator rend() {
+        return reverse_iterator<T>(begin());
     }
-    const std::reverse_iterator<T> rbegin() const{
-        return std::reverse_iterator<T>(end());
+    const iterator rbegin() const{
+        return reverse_iterator<T>(end());
     }
-    const std::reverse_iterator<T> rend() const {
-        return std::reverse_iterator<T>(begin());
+    const iterator rend() const {
+        return reverse_iterator<T>(begin());
     }
     void reserve(size_t num) {
         if (num > content_num) {
@@ -150,21 +135,16 @@ public:
                 alloc_.make(tmp_info + i, info[i]);
                 alloc_.erase(info + i);
             }
-            std::swap(info, tmp_info);
+            swap(info, tmp_info);
             alloc_.clear(tmp_info);
             content_num = num;
         }
     }
     void resize(size_t num) {
         if (size_num == 0) {
-            content_num = size_num = num;
-            info = alloc_.alloc(num);
-            size_t i = 0;
-            while (i < num) {
-                alloc_.make(info + i);
-                i++;
+            for (size_t i = 0; i < num; i++) {
+
             }
-            return;
         }
         if (num < size_num) {
             for (size_t i = num; i < size_num; i++) {
@@ -189,10 +169,10 @@ public:
             if (content_num != 0) {
                 reserve(size_num * 2);
             } else {
-                reserve(1);
+                reserve(4);
             }
         }
-        alloc_.make(info + size_num++, std::move(tmp));
+        alloc_.make(info + size_num++, move(tmp));
     }
     void pop_back() {
         if (size_num > 0) {
