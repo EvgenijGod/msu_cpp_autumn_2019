@@ -11,7 +11,7 @@ class Allocator
 public:
     template <class... T1>
     void make(T *tmp, T1&&... zizn) {
-        new(tmp) T(zizn...);
+        new(tmp) T(std::forward<T1>(zizn)...);
     }
     /*void make(T *tmp) {
         new (tmp) T();
@@ -90,7 +90,7 @@ public:
             info = alloc_.alloc(num);
             size_t i = 0;
             while (i < num) {
-                alloc_.make(std::forward<T*>(info + i));
+                alloc_.make(info + i);
                 i++;
             }
         }
