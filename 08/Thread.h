@@ -6,22 +6,25 @@
 #include <algorithm>
 
 class ThreadPool {
-    using my_func = std::function<void ()>;
+    using my_func = std::function<void()>;
 private:
     std::queue<my_func> Q;
     std::condition_variable Q1;
     std::mutex sem;
-    template <class Promise_ptr, class F, class... Args>
+
+    template<class Promise_ptr, class F, class... Args>
     void maker_of_task(Promise_ptr point, F func, Args... args) {
         point->set_value(func(args...));
         delete point;
     }
-    template <class F, class... Args>
+
+    template<class F, class... Args>
     void maker_of_task(std::promise<void> *point, F f, Args... args) {
+        f(args...);
         point->set_value();
         delete point;
-        f(args...);
     }
+
     std::vector<std::thread> threads;
     std::atomic<bool> living;
     size_t size;
@@ -31,12 +34,12 @@ public:
         size = poolSize;
         for (size_t i = 0; i < poolSize; i++) {
             threads.emplace_back(
-                    [this](){
+                    [this]() {
                         while (true) {
                             if (living == false) {
                                 break;
                             }
-                            std::unique_lock <std::mutex> lock(sem);
+                            std::unique_lock<std::mutex> lock(sem);
                             if (Q.empty() == false) {
                                 auto m_tmp(std::move(Q.front()));
                                 Q.pop();
@@ -57,7 +60,8 @@ public:
                     });
         }
     }
-    template <class F, class... Args>
+
+    template<class F, class... Args>
     auto exec(F f, Args... args) -> std::future<decltype(f(args...))> {
         auto promise = new std::promise<decltype(f(args...))>();
         auto future = promise->get_future();
@@ -71,6 +75,7 @@ public:
         Q1.notify_one();
         return future;
     }
+
     ~ThreadPool() {
         if (living == true) {
             living = false;
