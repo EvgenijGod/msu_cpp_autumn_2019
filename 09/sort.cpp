@@ -16,7 +16,7 @@ enum {
     SIZE = 1024 * 1024 * 4 / sizeof(size_t)
 };
 
-one_file_split_sort(std::ifstream &fin, std::mutex &file_m, size_t &num, std::mutex &num_m) {
+void one_file_split_sort(std::ifstream &fin, std::mutex &file_m, size_t &num, std::mutex &num_m) {
     auto *v = new uint64_t[SIZE]();
     size_t sz = 0;
     size_t cur_num;
